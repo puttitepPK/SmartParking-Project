@@ -1,0 +1,330 @@
+
+
+/* Main Content Styles */
+.main-content3 {        
+  flex: 1;
+  padding-bottom: 160px; /* Space for bottom navbar */
+}
+
+/* Header Styles */
+.text-center {
+  padding: 15px 0;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: white;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconPark {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Main Content Box */
+.boxback {
+  width: 93%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 0 20px 0;
+  background-color: #ffffff;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #1f1f1f !important;
+  overflow: hidden;
+}
+
+/* Parking Image Container */
+.photoparking {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}  
+
+.parking {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+/* Filter Container */
+.filter-container {
+  padding: 15px;
+  background-color: #f5f5f8;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.dropdown {
+  width: 95%;
+}
+/* Dropdown Containers */
+.dropdown-container {
+  position: relative;
+  flex: 1;
+}
+
+/* Form Controls */
+.form-control {
+  height: 42px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid #ffffff;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+}
+
+.form-control:focus {
+  border-color: #473366;
+  box-shadow: 0 0 0 0.2rem rgba(71, 51, 102, 0.25);
+}
+
+/* Custom Date Picker */
+.custom-date-picker {
+  width: 100% !important;
+  height: 42px;
+  font-size: 14px;
+  color: #333 !important;
+  background-color: #f4f4f4 !important;
+  border: 1px solid #fafafa;
+  border-radius: 8px;
+  padding: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.custom-date-picker:focus {
+  border-color: #473366;
+  box-shadow: 0 0 0 0.2rem rgba(71, 51, 102, 0.25);
+}
+
+
+
+/* Time Dropdown */
+.time-dropdown-btn {
+  width: 100% !important;
+  height: 42px;
+  font-size: 14px;
+  color: #333 !important;
+  background-color: #f4f4f4 !important;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  transition: all 0.3s ease;
+}
+
+.time-dropdown-btn:hover {
+  background-color: #e8e8e8 !important;
+}
+
+.time-dropdown-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(71, 51, 102, 0.25);
+}
+
+.dropdown-menu {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  border: 1px solid #eee;
+}
+
+.dropdown-item {
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f8;
+}
+
+.dropdown-item.disabled {
+  color: #999;
+  background-color: #f8f8f8;
+  cursor: not-allowed;
+}
+
+/* Reset Button */
+.btn-reset {
+  height: 42px;
+  width: 100px;
+  background-color: #473366;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-reset:hover {
+  background-color: #3a2b54;
+}
+
+/* Building and Floor buttons */
+.building-btn, .floor-btn {
+  height: 42px;
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: left;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.building-btn:hover, .floor-btn:hover {
+  background-color: #e8e8e8;
+}
+
+.building-btn:focus, .floor-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(71, 51, 102, 0.25);
+}
+
+/* Parking List */
+.parking-list {
+  padding: 15px;
+}
+
+.parking-item {
+  background-color: #473366;
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.parking-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.parking-content {
+  padding: 15px;
+}
+
+.parking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.parking-title {
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.info-icon {
+  min-width: 20px;
+  margin-right: 8px;
+  color: #FD6E2B;
+}
+
+/* Availability Badge */
+.availability-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-available {
+  background-color: #48bb78;
+  color: white;
+}
+
+.status-medium {
+  background-color: #f6e05e;
+  color: #744210;
+}
+
+.status-occupied {
+  background-color: #fc8181;
+  color: white;
+}
+
+/* Loading and Error States */
+.alert {
+  margin: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.alert-danger {
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 1px solid #fc8181;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 15px;
+  color: #666;
+}
+
+/* Media Queries */
+@media (max-width: 576px) {
+  .filter-row {
+    flex-direction: column;
+  }
+  
+  .parking-image {
+    height: 140px;
+  }
+  
+  .info-row {
+    font-size: 13px;
+  }
+}

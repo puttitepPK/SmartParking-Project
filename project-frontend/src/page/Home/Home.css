@@ -1,0 +1,664 @@
+.box2{
+    height: 130px;
+    margin-top: -20px;
+    margin-bottom: 35px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    border: 5px solid #FFFFFF;
+    border-bottom-left-radius: 70px  ;
+    border-bottom-color:  #F2F2E6;
+    border-left-color: #F2F2E6;
+}
+.Logo2-image{
+    width: 10rem;
+    height: 10rem;
+    object-fit: contain; /* รูปภาพจะถูกปรับขนาดโดยไม่ถูกตัด */
+    float: left;
+    margin-left: 6px;
+    padding-bottom: 1rem;
+}
+.content-with-navbar {
+    padding-bottom: 80px; /* เผื่อพื้นที่สำหรับแถบเมนูด้านล่าง */
+  }
+
+
+/*Profile*/
+.userprofilehome{
+  background: linear-gradient(135deg, #FD6E2B 0%, #FF8C4B 100%);
+  width: 92%;
+  height: 170px;
+  margin: 10px auto;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(253, 110, 43, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.userprofilehome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.profileinfoname {
+  font-weight: 800;
+  font-size: 26px !important;
+  margin-top: 10px !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.datahomeprofile{
+  margin-top: 12px;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  padding-left: 15px;
+}
+
+.datahomeprofile span{
+  font-size: 18px;
+  margin-left: 7px;
+  font-weight: 500;
+}
+
+.datahomeprofile p{
+  display: flex;
+  font-size: 18px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  align-items: center;
+}
+
+.photohomeprofile{
+  position: absolute;
+  top: 15px;
+  right: 18px;
+}
+
+.profile1{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.profile1:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: #f8f8f8;
+}
+
+/*อาคารแสดง member*/
+.buildingLot{
+  background-color: #ffffff;
+  width: 90%;
+  min-height: 150px;
+  height: auto;
+  margin: 0px auto;
+  margin-top: 30px;
+  border: 3px solid #F2F2E6; 
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.buildingLot:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(253, 110, 43, 0.25);
+}
+.lot1 {
+  margin-top: 6px;
+  padding-bottom: 10px;
+  width: 100%;
+  display: inline-block;
+}
+
+.buildingLot2{
+  background-color: #ffffff;
+  width: 90%;
+  min-height: 150px;
+  height: auto;
+  margin: 0px auto;
+  margin-top: 30px;
+  border: 3px solid #F2F2E6; 
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.buildingLot2:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(253, 110, 43, 0.25);
+}
+
+.active-parking-status {
+  color: #48bb78;
+  font-weight: bold;
+}
+
+.find-parking-link {
+  color: #4B2E83;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.find-parking-link:hover {
+  color: #FD6E2B;
+  text-decoration: underline;
+}
+.lot2 p{
+  float: left;
+  margin-left: 9px;
+  margin-bottom: 1px;
+}
+.titlelot2{
+  font-weight: bold;
+  color: #332D24;
+  font-size: 21px !important;
+  margin-top: 2px;
+  margin-bottom: 10px !important;
+  float: left;
+  margin-left: 2rem !important;
+}
+.parkingphoto2{
+  float: left;
+  margin-left: 4px;
+  margin-top: 4px;
+}
+
+.parkingphoto1{
+  float: left;
+  margin-left: 8px;
+}
+.titlelot{
+  font-weight: bold;
+  color: #332D24;
+  font-size: 21px;
+  margin-top: 8px;
+  margin-bottom: 3px !important;
+  float: left;
+}
+.lot1 p{
+  float: left;
+  margin-left: 16px;
+  margin-bottom: 5px;
+  clear: right;
+  width: 80%;
+}
+
+/*QRCode*/
+
+.QRCodescan{
+  background-color: white;
+  position: relative;
+  width: 88%;
+  height: 60px;
+  margin: 25px auto;
+  border: 3px solid #F2F2E6;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  cursor: pointer; /* รูปมือเฉพาะในกล่อง */
+  clear: both;
+}
+.bottomscan{
+  position: absolute;
+  margin-left: 130px;
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 24px;
+  color: #473366;
+  cursor: pointer; /* รูปมือเฉพาะในกล่อง */
+}
+.BoxQRCode{
+  background-color: #FFFFFF;
+  border: 3px solid #FD6E2B;
+  border-radius: 10px;
+  width: 83px;
+  height: 83px;
+  margin-top: -13.5px;
+  margin-left: -3px;
+  cursor: pointer; /* รูปมือเฉพาะในกล่อง */
+}
+.BoxQRCode img {
+  display: block; /* ป้องกันการเกิด margin/padding นอกขอบภาพ */
+}
+.QRCodescan > a {
+  text-decoration: none;
+}
+.QRCode{
+  margin: 3px auto;
+  width: 70px;
+  height: 70px;
+
+}
+
+/*Graph*/
+.boxgraph{
+  width: 90%;
+  height: 330px;
+  background-color: #FFFFFF;
+  margin: 25px auto;
+  border-radius: 10px;
+  padding: 5px;
+  clear: both;
+}
+.graphbox1{
+  margin-right: 5px;
+}
+
+
+/*Navber*/
+  .boxnav1{
+    width: 390px; /* ความกว้างของ bottom-navbar */
+    margin: 0 auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 10px  #ffffff;
+    background-color: #F2F2E6;
+    height: 80px;
+    padding-bottom: 80px; /* เผื่อพื้นที่สำหรับแถบเมนูด้านล่าง */
+  }
+
+  .boxnav{
+    width: 365px; /* ความกว้างของ bottom-navbar */
+    margin: 0 auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 10px  #F2F2E6;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    background-color: #F2F2E6;
+    height: 108px;
+  }
+  
+  .bottom-navbar {
+    width: 330px; /* ความกว้างของ bottom-navbar */
+    margin: 0 auto;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    background-color: #4B2E83;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border: 2px solid #FFFFFF;
+    padding: -10px;
+    z-index: 1000;   /*จัดองค์ประกอบให้เรียงกันในแนวนอน*/
+    display: flex;  /*ใช้ในการควบคุมว่าองค์ประกอบใดจะถูกแสดงก่อนหรือหลังองค์ประกอบอื่น ๆ เมื่อมีการซ้อนทับกัน*/
+    justify-content: space-evenly; /* กระจายไอเท็มให้เท่าๆ กัน */
+    align-items: center;
+    flex-wrap: nowrap; /* ป้องกันไม่ให้แยกแถว */
+    height: 98px !important; /* ความสูงอัตโนมัติ */
+    font-size: 14.5px;
+  }
+  
+  .nav-item {
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    width: 80px; /* ปรับความกว้างตามต้องการ */
+    transition: background-color 0.3s ease, color 0.3s ease; 
+
+  }
+  .nav-item a {
+    text-decoration: none; /* ลบเส้นใต้ */
+  }
+  
+  .nav-item a:hover {
+    text-decoration: none; /* ป้องกันเส้นใต้เมื่อชี้เมาส์ */
+  }
+  .nav-item .icon {
+    color: #FFFFFF; /* สีปกติของไอคอน */
+    transition: color 0.3s ease; 
+  }
+  .nav-item span {
+    color: #FFFFFF; /* สีปกติของไอคอน */
+    white-space: nowrap; /* ป้องกันการตัดคำ */
+    transition: color 0.3s ease;
+  }
+  .nav-item:hover {
+    border-radius: 10px; /* เพิ่มความโค้งมน */
+  }
+  
+  .nav-item:hover .icon {
+    color: #ff905c; /* สีไอคอนเมื่อชี้เมาส์ */
+  }
+  
+  .nav-item:hover span {
+    color: #ff905c; /* สีข้อความเมื่อชี้เมาส์ */
+  }
+  /*กดเข้มขึ้น*/
+  .nav-item:active {
+    border-radius: 10px;
+  }
+  .nav-item:active .icon {
+    color: #FD6E2B; /* สีไอคอนเมื่อ active */
+  }
+  
+  .nav-item:active span {
+    color: #FD6E2B; /* สีข้อความเมื่อ active */
+  }
+  /*ตอนอยู่หน้านั่นๆ*/
+  .nav-item.active {
+    border-radius: 10px;
+  }
+  .nav-item.active .icon {
+    color: #FD6E2B; /* สีไอคอนเมื่อ active */
+  }
+  
+  .nav-item.active span {
+    color: #FD6E2B; /* สีข้อความเมื่อ active */
+  }
+  
+  .icon {
+    display: block;
+  
+    margin-bottom: 5px; /* ระยะห่างระหว่างไอคอนและชื่อเมนู */
+    margin-left: 10px;
+  }
+  .home-link {
+    width: 60px; /* กำหนดความกว้างสำหรับปุ่ม หน้าแรก */
+    margin-left: -22px;
+    margin-right: -4px;
+  }
+  
+  .findparking-link {
+    width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ค้นหาลานจอด */
+    margin-left: -30px;
+  }
+  
+  .record-link {
+    width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ประวัติการจอด */
+    margin-left: -9px;
+  }
+  
+  .profile-link {
+    width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ข้อมูลส่วนตัว */
+    margin-left: 3px;
+    margin-right: 2px;
+  }
+
+  .home-link .icon {
+    margin-left: 9px; /* ขยับไอคอนไปทางขวาในปุ่ม หน้าแรก */
+    margin-right: 10px;
+
+  }
+  
+  .findparking-link .icon {
+    margin-left: 6px; /* ขยับไอคอนไปทางซ้ายในปุ่ม ค้นหาลานจอด */
+
+  }
+  
+  .record-link .icon {
+    margin-left: 16px; /* ขยับไอคอนไปทางขวาในปุ่ม ประวัติการจอด */
+
+  }
+  
+  .profile-link .icon {
+    margin-left: 5px; /* ขยับไอคอนไปทางซ้ายในปุ่ม ข้อมูลส่วนตัว */
+
+  }
+  
+  
+  /* ปรับสำหรับหน้าจอขนาดมือถือ */
+  @media (max-width: 576px) {
+    .boxnav{
+        width: 95%; /* ความกว้างของ bottom-navbar */
+        margin: 0 auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 10px solid #F2F2E6;
+        height: 115px;
+      }
+    .bottom-navbar {
+      width: 90%;
+      flex-direction: column; /* เรียงเป็นแนวยาว */
+      flex-wrap: wrap; /* ให้สามารถแบ่งเป็นหลายแถวได้ถ้าจำเป็น */
+      height: 105px;
+      padding: -10px;
+      font-size: 13.5px;
+    }
+  
+    .nav-item {
+      padding: 1px 0; /* เพิ่มพื้นที่ระหว่างไอเท็มในแนวตั้ง */
+      text-align: center;
+    }
+    .home-link {
+      width: 60px; /* กำหนดความกว้างสำหรับปุ่ม หน้าแรก */
+      margin-left: -28px;
+      margin-right: -4px;
+    }
+    
+    .findparking-link {
+      width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ค้นหาลานจอด */
+      margin-left: -31px;
+    }
+    
+    .record-link {
+      width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ประวัติการจอด */
+      margin-left: -10px;
+    }
+    
+    .profile-link {
+      width: 80px; /* กำหนดความกว้างสำหรับปุ่ม ข้อมูลส่วนตัว */
+      margin-left: 10px;
+    }
+  
+    .home-link .icon {
+      margin-left: 10px; /* ขยับไอคอนไปทางขวาในปุ่ม หน้าแรก */
+      margin-right: 10px;
+    }
+    
+    .findparking-link .icon {
+      margin-left: 2px; /* ขยับไอคอนไปทางซ้ายในปุ่ม ค้นหาลานจอด */
+    }
+    
+    .record-link .icon {
+      margin-left: 10px; /* ขยับไอคอนไปทางขวาในปุ่ม ประวัติการจอด */
+    }
+    
+    .profile-link .icon {
+      margin-left: 6px; /* ขยับไอคอนไปทางซ้ายในปุ่ม ข้อมูลส่วนตัว */
+    }
+  
+} 
+
+.appointment-details2{
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 80%;
+  
+}
+/* ปรับปรุงสไตล์สำหรับ buildingLot */
+.buildingLot, .buildingLot2 {
+  background-color: #ffffff;
+  width: 90%;
+  min-height: 150px;
+  height: auto;
+  margin: 0px auto;
+  margin-top: 23px;
+  border: 3px solid #F2F2E6; 
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding-bottom: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.buildingLot:hover, .buildingLot2:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(253, 110, 43, 0.25);
+}
+
+.lot1, .lot2 {
+  position: relative;
+  margin-top: 6px;
+  padding-bottom: 15px;
+  width: 100%;
+  display: inline-block;
+}
+/* เพิ่มองค์ประกอบตกแต่ง */
+.lot1::before, .lot2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #FD6E2B, #ff905c);
+  opacity: 0.8;
+}
+
+/* ปรับปรุงสไตล์ไอคอนที่จอดรถ */
+.parkingphoto1, .parkingphoto2 {
+  float: left;
+  margin-left: 15px;
+  margin-top: 15px;
+  background-color: rgba(253, 110, 43, 0.1);
+  padding: 8px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  margin-left: 8rem !important;
+}
+
+.parkingphoto1:hover, .parkingphoto2:hover {
+  transform: scale(1.05);
+  background-color: rgba(253, 110, 43, 0.15);
+}
+
+/* สไตล์หัวข้อ */
+.titlelot, .titlelot2 {
+  font-weight: bold;
+  color: #332D24;
+  font-size: 22px;
+  margin-top: 15px;
+  margin-bottom: 8px !important;
+  float: left;
+  position: relative;
+  margin-left: 2rem !important;
+}
+
+  
+  /* สไตล์ย่อหน้า */
+.lot1 p, .lot2 p {
+  float: left;
+  margin-left: 16px;
+  margin-bottom: 8px;
+  clear: right;
+  width: 80%;
+  font-size: 16px;
+  color: #555;
+  margin-left: 2rem !important;
+}
+/* สไตล์สถานะการจอด */
+.active-parking-status {
+  color: #48bb78;
+  font-weight: bold;
+  background-color: rgba(72, 187, 120, 0.1);
+  padding: 3px 8px;
+  border-radius: 15px;
+  font-size: 0.9em;
+}
+/* ปรับปรุงลิงก์ค้นหาที่จอดรถ */
+.find-parking-link {
+  color: #4B2E83;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: rgba(75, 46, 131, 0.08);
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.find-parking-link:hover {
+  color: #FD6E2B;
+  background-color: rgba(253, 110, 43, 0.1);
+  text-decoration: none;
+  transform: translateX(3px);
+}
+
+/* สไตล์รายละเอียดการนัดหมาย */
+.appointment-details2 {
+  margin-left: 15px;
+  margin-top: 10px;
+  width: 90%;
+  padding: 5px 10px;
+  background-color: rgba(75, 46, 131, 0.03);
+  border-radius: 8px;
+}
+
+.appointment-details2 p {
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+
+/* สไตล์สำหรับกรณีไม่มีที่จอดรถหรือการนัดหมายที่ใช้งานอยู่ */
+.lot1 p:nth-child(3), .lot2 p:nth-child(3) {
+  font-style: italic;
+  color: #888;
+}
+
+/* สไตล์ปุ่ม */
+.appointment-details-btn {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.appointment-details-btn button {
+  background-color: #4B2E83;
+  border-color: #4B2E83;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+}
+
+.appointment-details-btn button:hover {
+  background-color: #FD6E2B;
+  border-color: #FD6E2B;
+  transform: translateY(-2px);
+}
+@media (max-width: 576px) {
+  .lot1::before, .lot2::before {
+    height: 4px;
+  }
+  
+  .parkingphoto1, .parkingphoto2 {
+    margin-top: 12px;
+    margin-left: 12px;
+  }
+  
+  .titlelot, .titlelot2 {
+    font-size: 20px;
+    margin-top: 12px;
+  }
+  
+  .lot1 p, .lot2 p {
+    font-size: 15px;
+  }
+}
+

@@ -1,0 +1,171 @@
+.appointment-form {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 15px auto;
+  padding: 20px;
+  max-width: 100%;
+  width: 90%;
+}
+
+.headfrom1 {
+  color: #4e73df;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+.input-group .form-control {
+  border-radius: 10px;
+  width: 100%;
+  padding-right: 40px; /* เพิ่มพื้นที่ด้านขวาสำหรับไอคอน */
+}
+.input-group-text {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 80%;
+  background: transparent;
+  border: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+}
+
+/* ปรับขนาดช่องหมายเหตุ */
+.note-textarea {
+  min-height: 120px; /* เพิ่มความสูงขั้นต่ำ */
+  resize: vertical; /* อนุญาตให้ผู้ใช้ปรับขนาดได้ในแนวตั้ง */
+}
+/* ปรับขนาดช่องหมายเหตุ */
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #4e73df;
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.form-buttons2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 0 15px;
+}
+
+.btn2, .btn3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 30px; /* เพิ่มขนาดปุ่ม */
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 16px; /* เพิ่มขนาดตัวอักษร */
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  min-width: 120px; /* กำหนดความกว้างขั้นต่ำ */
+  letter-spacing: 0.5px; /* เพิ่มระยะห่างตัวอักษร */
+}
+
+.btn2 {
+  background-color: #e8eaed; /* สีพื้นหลังของปุ่ม */
+  color: #4a5568; /* สีตัวอักษร */
+  border: 1px solid #d1d9e6;
+}
+
+.btn3 {
+  background-color: #3b5bf5; /* ปรับสีพื้นหลัง */
+  color: white;
+}
+
+.btn2:hover {
+  background-color: #d1d9e6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn3:hover {
+  background-color: #2d46bb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(59, 91, 245, 0.3);
+}
+
+.btn2:active, .btn3:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* เพิ่มเอฟเฟกต์ Disabled */
+.btn2:disabled, .btn3:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* สไตล์สำหรับ Spinner */
+.btn3 .spinner-border {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.success-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  z-index: 100;
+  width: 80%;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 5px 5px;
+}
+
+.search-results-dropdown .list-group-item {
+  padding: 10px  15px;
+  border-left: none;
+  border-right: none;
+}
+
+.search-results-dropdown .list-group-item:first-child {
+  border-top: none;
+}
+
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

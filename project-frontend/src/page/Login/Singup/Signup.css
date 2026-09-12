@@ -1,0 +1,37 @@
+.user1{
+    margin-top: -10px;
+    margin-left: 25px;
+    margin-right: 25px;
+    
+}
+.pass1{
+    margin-top: -10px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.custom11-btn {
+    font-weight: 600 !important;
+    height: 3rem;
+    width: 88%;
+    margin-top: 35px;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: #FD6E2B !important;  /* เปลี่ยนสีพื้นหลัง */
+    color: white !important;  /* เปลี่ยนสีข้อความ */
+    border-radius: 5px;
+    border: none;
+    outline: none; /* ลบขอบโฟกัสเริ่มต้น */
+    /* border: 1px solid transparent;   /*ตั้งค่าขอบเริ่มต้น */
+    /* transition: border-color 0.3s ease;  */
+    transition: background-color 0.3s ease; 
+    cursor: pointer;
+  }
+  
+.custom11-btn:hover {
+    background-color: #f36929 !important;  /* เปลี่ยนสีเมื่อวางเมาส์ */
+    /* border-color: #ffffff !important;  */
+  }
+
+.custom11-btn:active {
+   background-color: #eb6628 !important;  /* สีเมื่อกดปุ่ม */
+}

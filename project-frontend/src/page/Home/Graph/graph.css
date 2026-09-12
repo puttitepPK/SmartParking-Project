@@ -1,0 +1,107 @@
+.dategraphtime {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  padding: 0 15px;
+  margin-top: 20px;
+}
+
+.custom-date-pickerG2 {
+  width: 140px !important;
+  height: 40px;
+  font-size: 16px;
+  color: #2e2e2e !important;
+  background-color: #f0efef !important;
+  border: 2px solid #cccccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+  padding-left: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.custom-date-pickerG2:focus {
+  border-color: #FD6E2B;
+  background-color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(253, 110, 43, 0.2);
+}
+
+.custom-date-pickerGT {
+  width: 140px !important;
+  height: 40px;
+  font-size: 16px;
+  color: #2e2e2e !important;
+  background-color: #f0efef !important;
+  border: 2px solid #cccccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+  padding-left: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.custom-date-pickerGT:focus {
+  border-color: #FD6E2B;
+  background-color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(253, 110, 43, 0.2);
+}
+
+.titlegraph1 {
+  margin-bottom: 25px;
+  color: #473366;
+  position: relative;
+  padding-left: 15px;
+}
+
+.titlegraph1::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  bottom: -8px;
+  width: 40px;
+  height: 3px;
+  background-color: #FD6E2B;
+  border-radius: 2px;
+}
+
+.titlegraph1 p {
+  font-weight: 700;
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+/* เพิ่มเติมสำหรับปรับแต่งกราฟ */
+/* .graphall {
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+} */
+
+.graphall:hover {
+  box-shadow: 0 6px 15px rgba(71, 51, 102, 0.15);
+  transform: translateY(-2px);
+}
+
+/* รองรับหน้าจอมือถือ */
+@media (max-width: 576px) {
+  .dategraphtime {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 5px;
+  }
+  
+  .custom-date-pickerG2, 
+  .custom-date-pickerGT {
+      width: 120px !important;
+      height: 35px;
+      font-size: 14px;
+  }
+  
+  .titlegraph1 p {
+      font-size: 20px;
+  }
+}

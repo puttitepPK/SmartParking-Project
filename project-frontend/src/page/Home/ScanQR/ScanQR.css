@@ -1,0 +1,238 @@
+.text-muted1 {
+  color: white;
+}
+/* ส่วนหัว */
+.box3 {
+  width: 100%;
+  height: 70px;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e1e1e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.Logo3-image {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 60px;
+  height: auto;
+}
+
+.main-content {
+  padding: 20px;
+  padding-top: 20px;
+  flex: 1;
+}
+
+.titleQR {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.titleQR h2 {
+  font-size: 24px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* QR Scanner */
+.boxscan {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.previewStyle {
+  width: 100%;
+  max-width: 350px;
+  height: 350px;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ในกรณีที่มีข้อผิดพลาดกับกล้อง */
+.camera-error {
+  width: 100%;
+  max-width: 350px;
+  height: 350px;
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.scan-result {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* ปุ่มจำลองการสแกน */
+.simulation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.entry-btn, .exit-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.entry-btn {
+  background-color: #FD6E2B;
+  color: white;
+}
+
+.entry-btn:hover {
+  background-color: #0069d9;
+}
+
+.entry-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.exit-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.exit-btn:hover {
+  background-color: #c82333;
+}
+
+.exit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* การแสดงผลการจอดที่กำลังใช้งาน */
+.active-parking-card {
+  margin: 15px 0;
+  border-left: 5px solid #007bff;
+}
+
+.active-parking-card .card-header {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.parking-info {
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border-left: 3px solid #007bff;
+}
+
+/* เมนูล่าง */
+.boxnav1 {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.boxnav {
+  background-color: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-navbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 8px 0;
+}
+
+.nav-item .icon {
+  margin-bottom: 4px;
+}
+
+.nav-item.active {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.nav-item:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Modal styles */
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.modal-title {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Form styles */
+.form-label {
+  font-weight: 600;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+.status-badge.high {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.medium {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.status-badge.low {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.status-badge.unavailable {
+  background-color: #dc3545;
+  color: white;
+}

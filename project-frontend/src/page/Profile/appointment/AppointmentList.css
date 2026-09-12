@@ -1,0 +1,116 @@
+.appointment-list-page {
+    min-height: 900px;
+    background-color: #f8f9fa;
+    padding-bottom: 80px;
+  }
+  
+  .appointment-container {
+    padding-top: 15px;
+    padding-bottom: 70px;
+  }
+  
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .page-title {
+    color: #4e73df;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e3e6f0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .date-filter {
+    margin-bottom: 15px;
+  }
+  
+  .back-button {
+    margin-right: 15px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .appointment-tabs {
+    border-bottom: 1px solid #e3e6f0;
+  }
+  
+  .appointment-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 8px 15px;
+    margin-right: 10px;
+  }
+  
+  .appointment-tabs .nav-link.active {
+    color: #4e73df;
+    background-color: transparent;
+    border-bottom: 3px solid #4e73df;
+    font-weight: 600;
+  }
+  
+  .appointment-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .appointment-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
+  }
+  
+  .appointment-date {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #4e73df;
+    margin-bottom: 5px;
+  }
+  
+  .appointment-time, .location, .visitor, .member {
+    margin-bottom: 5px;
+    color: #5a5c69;
+  }
+  
+  .appointment-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  
+  .qr-code {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+  }
+  
+  .qr-info {
+    text-align: left;
+    margin-top: 15px;
+  }
+  
+  .detail-item {
+    margin-bottom: 10px;
+  }
+  
+  .detail-item strong {
+    color: #4e73df;
+    margin-right: 5px;
+  }

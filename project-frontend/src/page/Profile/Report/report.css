@@ -1,0 +1,139 @@
+.report-page {
+  background-color: #473366;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+  /* font-family: Arial, sans-serif; */
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.logo-image {
+  max-width: 100px;
+  height: auto;
+}
+
+.report-content {
+  max-width: 400px;
+  margin: 0 auto;
+  width: 85%;
+  background-color: #473366;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.report-title {
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: -15px;
+  margin-bottom: 30px;
+  color: #fff;
+  
+}
+
+.form-group label {
+  color: #fff;
+}
+
+.form-control {
+  background-color: #fff;
+  color: #ffffff;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: left; /* ให้ข้อความในช่องกรอกข้อมูลชิดซ้าย */
+}
+
+/* เปลี่ยนสีของป้าย 'ปัญหาที่พบ' */
+.custom-label {
+  color: #ffffff;  
+  font-weight: bold;  /* สามารถทำให้ข้อความตัวหนาได้ */
+  width: 80%;
+  text-align: left;  /* จัดข้อความใน label ให้ชิดซ้าย */
+  margin-left: 0; /* ปรับระยะห่างจากซ้าย */
+  display: block; /* ทำให้ label เป็น block element เพื่อให้ text-align มีผล */
+}
+
+
+ 
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.button-group .btn {
+  width: 48%;
+}
+
+button.btn-secondary {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+}
+
+button.btn-primary {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.btn-primary .fa-paper-plane,
+button.btn-secondary .fa-arrow-left {
+  margin-left: 8px;
+}
+
+
+.icon33 {
+  margin-right: 2px;
+  margin-left: -10px;
+}
+
+.form-buttons33 {
+  display: flex; /* ใช้ Flexbox */
+  justify-content: center; /* จัดให้อยู่ตรงกลาง */
+  align-items: center; /* จัดตำแหน่งแนวตั้ง */
+  gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+  margin-top: 40px; /* ระยะห่างด้านบน */
+}
+
+.form-buttons33 .btn2,
+.form-buttons33 .btn3 {
+  background-color: #ffffff !important; 
+  color: #000000; 
+  border: 2px solid #cccccc;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  
+
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  gap:5px;
+  transition: all 0.3s ease;
+  width: 160px; /* กำหนดความกว้างให้ปุ่มเท่ากัน */
+  height: 50px; /* กำหนดความสูงให้ปุ่มเท่ากัน */
+  text-align: center; /* จัดข้อความให้อยู่กลาง */
+}
+
+.form-buttons33 .btn2:hover,
+.form-buttons33 .btn3:hover {
+  background-color: #ff8953; 
+  color: #000000;
+  border-color: #FD6E2B;
+}
+.form-buttons33 .btn2:active,
+.form-buttons33 .btn3:active {
+  background-color: #ffdfd0 !important;
+  color: #000000;
+  border-color: #FD6E2B;
+}

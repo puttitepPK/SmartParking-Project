@@ -1,0 +1,1117 @@
+import React, { useState, useEffect } from "react";
+import { Navbar, Nav, Modal, Form, Button, Spinner, Alert, Card } from "react-bootstrap";
+import QrScanner from "react-qr-scanner";
+import { faAddressCard } from "@fortawesome/free-solid-svg-icons";
+import { House, Search, CardChecklist, Person } from "react-bootstrap-icons";
+import { FaSearch, FaHistory, FaUser } from "react-icons/fa";
+import { faBuildingCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IoHome } from "react-icons/io5";
+
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import logo from "/public/Metthier Master Logo.png";
+import "./ScanQR.css";
+
+// Import services
+import { findParking } from "../../../services/parkingService";
+import { getUserVehicles } from "../../../services/apiService";
+import {
+  createParkingEntry,
+  createParkingExit,
+  getActiveParking,
+} from "../../../services/parkingHistoryService";
+
+import { getUserAppointments } from "../../../services/appointmentService";
+
+function ScanQR() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // State variables
+  const [scanResult, setScanResult] = useState(null);
+  const [showEntryModal, setShowEntryModal] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
+  const [parkingAreas, setParkingAreas] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [activeParking, setActiveParking] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [cameraError, setCameraError] = useState(false);
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [time, setTime] = useState(new Date().toTimeString().substring(0, 5));
+  const [selectedBuilding, setSelectedBuilding] = useState("");
+  const [appointmentFromStorage, setAppointmentFromStorage] = useState(null);
+
+  // เพิ่ม state สำหรับตรวจสอบการนัดหมาย
+  const [hasAppointmentToday, setHasAppointmentToday] = useState(false);
+  const [visitorAppointments, setVisitorAppointments] = useState([]);
+  const [role, setRole] = useState("");
+
+  // Form data for parking entry
+  const [entryFormData, setEntryFormData] = useState({
+    area_id: "",
+    vehicle_id: "",
+    entry_time: new Date().toTimeString().substring(0, 5),
+  });
+
+  // Form data for parking exit
+  const [exitFormData, setExitFormData] = useState({
+    history_id: "",
+    exit_time: new Date().toTimeString().substring(0, 5),
+  });
+
+  // ดึงอาคารที่ไม่ซ้ำกันจากลานจอด
+  const buildings = [...new Set(parkingAreas.map(area => area.building))];
+  
+  // กรองลานจอดตามอาคารที่เลือก
+  const filteredAreas = selectedBuilding 
+    ? parkingAreas.filter(area => area.building === selectedBuilding)
+    : parkingAreas;
+
+  // สร้างฟังก์ชัน handleOpenEntryModal แทนการเปิด Modal โดยตรง
+  const handleOpenEntryModal = () => {
+    // ตรวจสอบเงื่อนไขว่า Visitor มีการนัดหมายหรือไม่
+    if (role === "Visitor" && !hasAppointmentToday && !appointmentFromStorage) {
+      setError("คุณไม่มีการนัดหมายสำหรับวันนี้ ไม่สามารถเข้าจอดได้");
+      return;
+    }
+    
+    // รีเซ็ตฟอร์มเป็นค่าเริ่มต้น
+    let updatedFormData = {
+      ...entryFormData,
+      entry_time: new Date().toTimeString().substring(0, 5)
+    };
+    
+    // ถ้าเป็น Visitor ให้ตั้งค่า area_id จากการนัดหมาย
+    if (role === "Visitor") {
+      if (appointmentFromStorage && appointmentFromStorage.area_id) {
+        console.log("Setting area_id in handleOpenEntryModal from storage:", appointmentFromStorage.area_id);
+        updatedFormData.area_id = appointmentFromStorage.area_id;
+      } else if (hasAppointmentToday && visitorAppointments.length > 0 && visitorAppointments[0].area_id) {
+        console.log("Setting area_id in handleOpenEntryModal from today's appointment:", visitorAppointments[0].area_id);
+        updatedFormData.area_id = visitorAppointments[0].area_id;
+      }
+      
+      // ตั้งค่าเวลาจากการนัดหมาย
+      if (appointmentFromStorage && appointmentFromStorage.start_time) {
+        updatedFormData.entry_time = appointmentFromStorage.start_time;
+      } else if (hasAppointmentToday && visitorAppointments.length > 0 && visitorAppointments[0].start_time) {
+        updatedFormData.entry_time = visitorAppointments[0].start_time;
+      }
+      
+      // ตั้งค่ายานพาหนะจากการนัดหมาย
+      if (appointmentFromStorage && appointmentFromStorage.vehicle_id) {
+        updatedFormData.vehicle_id = appointmentFromStorage.vehicle_id;
+      } else if (hasAppointmentToday && visitorAppointments.length > 0 && visitorAppointments[0].vehicle_id) {
+        updatedFormData.vehicle_id = visitorAppointments[0].vehicle_id;
+      }
+    }
+    
+    // อัพเดทฟอร์ม
+    setEntryFormData(updatedFormData);
+    console.log("Updated form data in handleOpenEntryModal:", updatedFormData);
+    
+    setShowEntryModal(true);
+    setError(""); 
+    setSuccess("");
+  };
+
+  // เพิ่มฟังก์ชันตรวจสอบข้อมูลจาก localStorage
+  const checkStoredAppointment = () => {
+    const storedAppointment = localStorage.getItem('selectedAppointment');
+    if (storedAppointment) {
+      try {
+        const parsedAppointment = JSON.parse(storedAppointment);
+        setAppointmentFromStorage(parsedAppointment);
+        
+        console.log("Found appointment from storage:", parsedAppointment);
+        
+        // อัพเดตฟิลด์ area_id ในฟอร์มเข้าจอด
+        if (parsedAppointment.area_id) {
+          console.log("Setting area_id from stored appointment:", parsedAppointment.area_id);
+          setEntryFormData(prev => ({
+            ...prev,
+            area_id: parsedAppointment.area_id
+          }));
+          
+          // ตรวจสอบว่า area_id ถูกตั้งค่าหรือไม่
+          setTimeout(() => {
+            console.log("Current entryFormData after setting area_id from storage:", entryFormData);
+          }, 100);
+        } else {
+          console.error("No area_id found in stored appointment:", parsedAppointment);
+        }
+        
+        // หาอาคารจากการนัดหมาย
+        if (parsedAppointment.building_name) {
+          setSelectedBuilding(parsedAppointment.building_name);
+        }
+        
+        // เปิด Modal จำลองการเข้าจอดอัตโนมัติเมื่อต้องการ
+        const storedRole = localStorage.getItem("userRole");
+        if (storedRole === "Visitor") {
+          // ถ้ามีการนัดหมายจาก localStorage ให้ถือว่ามีการนัดหมายในวันนี้
+          setHasAppointmentToday(true);
+          
+          // เปิด Modal ทันที
+          setShowEntryModal(true);
+        }
+      } catch (error) {
+        console.error("Error parsing stored appointment:", error);
+      }
+      
+      // ลบข้อมูลจาก localStorage เพื่อป้องกันการเปิด Modal ซ้ำ
+      localStorage.removeItem('selectedAppointment');
+    }
+  };
+
+  // เพิ่มฟังก์ชันตรวจสอบการนัดหมายของ Visitor
+  const checkVisitorAppointments = async () => {
+    try {
+      const storedRole = localStorage.getItem("userRole");
+      setRole(storedRole);
+      
+      // ตรวจสอบว่าเป็น Visitor หรือไม่
+      if (storedRole !== "Visitor") {
+        return;
+      }
+      
+      // ดึงการนัดหมายที่ยืนยันแล้วสำหรับวันนี้
+      const today = new Date().toISOString().split('T')[0];
+      const response = await getUserAppointments({
+        status: "confirmed",
+        date: today,
+      });
+
+      if (response.success && response.data && response.data.length > 0) {
+        setHasAppointmentToday(true);
+        setVisitorAppointments(response.data);
+        
+        // ใช้ข้อมูลการนัดหมายแรกเพื่อตั้งค่าฟอร์ม
+        const appointment = response.data[0];
+        console.log("Found today's appointment:", appointment);
+        
+        // อัพเดตฟิลด์ area_id ในฟอร์มเข้าจอด
+        if (appointment.area_id) {
+          console.log("Setting area_id from appointment:", appointment.area_id);
+          setEntryFormData(prev => ({
+            ...prev,
+            area_id: appointment.area_id
+          }));
+          
+          // ตรวจสอบว่า area_id ถูกตั้งค่าหรือไม่
+          setTimeout(() => {
+            console.log("Current entryFormData after setting area_id:", entryFormData);
+          }, 100);
+        } else {
+          console.error("No area_id found in appointment:", appointment);
+        }
+        
+        // หาอาคารจากการนัดหมาย
+        if (appointment.building_name) {
+          setSelectedBuilding(appointment.building_name);
+        }
+        
+        // ตั้งค่าวันที่และเวลาตามการนัดหมาย
+        if (appointment.appointment_date) {
+          setDate(appointment.appointment_date);
+        }
+        
+        if (appointment.start_time) {
+          setEntryFormData(prev => ({
+            ...prev,
+            entry_time: appointment.start_time
+          }));
+        }
+        
+        // ถ้ามีการระบุยานพาหนะในการนัดหมาย
+        if (appointment.vehicle_id) {
+          setEntryFormData(prev => ({
+            ...prev,
+            vehicle_id: appointment.vehicle_id
+          }));
+        }
+      } else {
+        setHasAppointmentToday(false);
+        setVisitorAppointments([]);
+      }
+    } catch (error) {
+      console.error("Error checking visitor appointments:", error);
+      setHasAppointmentToday(false);
+    }
+  };
+
+  // ฟังก์ชันรีเฟรชข้อมูลทั้งหมด
+  const refreshAllData = async () => {
+    try {
+      setLoading(true); // เริ่มสถานะโหลด
+      
+      // ดึงข้อมูลยานพาหนะ
+      const vehiclesData = await getUserVehicles();
+      if (Array.isArray(vehiclesData)) {
+        setVehicles(vehiclesData); // อัปเดตรายการยานพาหนะ
+        
+        // เลือกยานพาหนะหลักหรือยานพาหนะแรก
+        if (vehiclesData.length > 0) {
+          const primaryVehicle = vehiclesData.find(v => v.is_primary) || vehiclesData[0];
+          setEntryFormData(prev => ({
+            ...prev,
+            vehicle_id: primaryVehicle.vehicle_id
+          }));
+        }
+      }
+
+      // ดึงข้อมูลการจอดที่กำลังใช้งาน
+      const activeResponse = await getActiveParking();
+      if (activeResponse.success && activeResponse.hasActiveParking) {
+        setActiveParking(activeResponse.data);
+        
+        // ตั้งค่า history_id สำหรับฟอร์มออกจากที่จอด
+        setExitFormData(prev => ({
+          ...prev,
+          history_id: activeResponse.data.history_id
+        }));
+      } else {
+        setActiveParking(null); // รีเซ็ตสถานะการจอดถ้าไม่มีการจอดที่กำลังใช้งาน
+      }
+      
+      // ดึงข้อมูลลานจอดรถ
+      await fetchParkingAreas();
+      
+      // รีเฟรชข้อมูลการนัดหมาย (ถ้าเป็น Visitor)
+      if (role === "Visitor") {
+        await checkVisitorAppointments();
+      }
+      
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+      setError("ไม่สามารถรีเฟรชข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setLoading(false); // จบสถานะโหลด
+    }
+  };
+
+  // Fetch data when component mounts
+  useEffect(() => {
+    const initializeData = async () => {
+      await fetchInitialData();
+      // ตรวจสอบการนัดหมายของ Visitor
+      await checkVisitorAppointments();
+      // ตรวจสอบการนัดหมายที่ถูกส่งมาจาก localStorage หลังจากตรวจสอบการนัดหมายแล้ว
+      checkStoredAppointment();
+    };
+    
+    initializeData();
+  }, []);
+
+  // ดึงข้อมูลลานจอดเมื่อวันที่หรือเวลาเปลี่ยน
+  useEffect(() => {
+    fetchParkingAreas();
+  }, [date, time, selectedBuilding]);
+
+  // ดึงข้อมูลเริ่มต้น
+  const fetchInitialData = async () => {
+    try {
+      setLoading(true);
+      
+      // ดึงข้อมูล role
+      const storedRole = localStorage.getItem("userRole");
+      setRole(storedRole);
+      
+      // ดึงข้อมูลยานพาหนะ
+      const vehiclesData = await getUserVehicles();
+      if (Array.isArray(vehiclesData)) {
+        setVehicles(vehiclesData);
+        
+        // ตั้งค่าเริ่มต้นเป็นรถคันหลักหรือคันแรก
+        if (vehiclesData.length > 0) {
+          const primaryVehicle = vehiclesData.find(v => v.is_primary) || vehiclesData[0];
+          setEntryFormData(prev => ({
+            ...prev,
+            vehicle_id: primaryVehicle.vehicle_id
+          }));
+        }
+      }
+
+      // ดึงข้อมูลการจอดที่กำลังใช้งานอยู่
+      const activeResponse = await getActiveParking();
+      if (activeResponse.success && activeResponse.hasActiveParking) {
+        setActiveParking(activeResponse.data);
+        
+        // ตั้งค่า history_id สำหรับฟอร์มออกจากที่จอด
+        setExitFormData(prev => ({
+          ...prev,
+          history_id: activeResponse.data.history_id
+        }));
+      }
+      
+      // ดึงข้อมูลลานจอดรถ
+      await fetchParkingAreas();
+      
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+      setError("ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ดึงข้อมูลลานจอดรถ
+  const fetchParkingAreas = async () => {
+    try {
+      if (!date || !time) return;
+      
+      setLoading(true);
+      const response = await findParking(date, time, selectedBuilding);
+      if (response.success) {
+        setParkingAreas(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching parking areas:", error);
+      setError("ไม่สามารถดึงข้อมูลลานจอดรถได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle QR scanning
+  const handleScan = (data) => {
+    if (data) {
+      setScanResult(data.text);
+      
+      try {
+        // ตรวจสอบว่าเป็น Visitor และไม่มีการนัดหมายหรือไม่
+        if (role === "Visitor" && !hasAppointmentToday && !appointmentFromStorage) {
+          setError("คุณไม่มีการนัดหมายสำหรับวันนี้ ไม่สามารถเข้าจอดได้");
+          return;
+        }
+        
+        // ตรวจสอบว่ามีการจอดที่กำลังใช้งานอยู่หรือไม่
+        if (activeParking) {
+          // ถ้ามีการจอดที่กำลังใช้งานอยู่ ให้เปิด Modal ออกจากที่จอด
+          setShowExitModal(true);
+        } else {
+          // ถ้าไม่มีการจอดที่กำลังใช้งานอยู่ ให้เปิด Modal เข้าจอด
+          handleOpenEntryModal();
+        }
+      } catch (error) {
+        console.error("Error handling QR scan:", error);
+        setError(error.message || "เกิดข้อผิดพลาดในการสแกน QR Code");
+      }
+    }
+  };
+
+  // Handle QR scanning error
+  const handleScanError = (err) => {
+    console.error("QR Scan Error:", err);
+    setCameraError(true);
+  };
+
+  // Handle form change for parking entry
+  const handleEntryFormChange = (e) => {
+    const { name, value } = e.target;
+    setEntryFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submission for parking entry
+  const handleEntrySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // ตรวจสอบว่าเป็น Visitor และไม่มีการนัดหมายหรือไม่
+      if (role === "Visitor" && !hasAppointmentToday && !appointmentFromStorage) {
+        throw new Error("คุณไม่มีการนัดหมายสำหรับวันนี้ ไม่สามารถเข้าจอดได้");
+      }
+      
+      // สร้างข้อมูลฟอร์มใหม่
+      let formData = {};
+      
+      // ถ้าเป็น Visitor ให้ใช้ข้อมูลจากการนัดหมายโดยตรง
+      if (role === "Visitor") {
+        // ใช้ข้อมูลจาก appointmentFromStorage ก่อน (ถ้ามี)
+        if (appointmentFromStorage) {
+          // สร้างข้อมูลฟอร์มจากการนัดหมายโดยตรง
+          formData = {
+            area_id: appointmentFromStorage.area_id,
+            entry_time: appointmentFromStorage.start_time || new Date().toTimeString().substring(0, 5),
+            vehicle_id: appointmentFromStorage.vehicle_id || entryFormData.vehicle_id
+          };
+          
+          console.log("Created form data directly from stored appointment:", formData);
+          
+          // ตรวจสอบว่ามี area_id หรือไม่
+          if (!formData.area_id) {
+            console.error("Missing area_id in appointmentFromStorage:", appointmentFromStorage);
+            
+            // ถ้าไม่มี area_id แต่มี area_name ให้ค้นหา area_id จาก area_name
+            if (appointmentFromStorage.area_name) {
+              console.log("Trying to find area_id from area_name:", appointmentFromStorage.area_name);
+              
+              // ค้นหาพื้นที่จอดรถที่มีชื่อตรงกับ area_name
+              const matchingArea = parkingAreas.find(area => area.area_name === appointmentFromStorage.area_name);
+              
+              if (matchingArea) {
+                console.log("Found matching area:", matchingArea);
+                formData.area_id = matchingArea.area_id;
+              } else {
+                throw new Error("ไม่พบข้อมูลลานจอดในการนัดหมาย กรุณาติดต่อผู้ดูแลระบบ");
+              }
+            } else {
+              throw new Error("ไม่พบข้อมูลลานจอดในการนัดหมาย กรุณาติดต่อผู้ดูแลระบบ");
+            }
+          }
+        } 
+        // ถ้าไม่มี appointmentFromStorage แต่มีการนัดหมายวันนี้
+        else if (hasAppointmentToday && visitorAppointments.length > 0) {
+          const appointment = visitorAppointments[0];
+          
+          // สร้างข้อมูลฟอร์มจากการนัดหมายโดยตรง
+          formData = {
+            area_id: appointment.area_id,
+            entry_time: appointment.start_time || new Date().toTimeString().substring(0, 5),
+            vehicle_id: appointment.vehicle_id || entryFormData.vehicle_id
+          };
+          
+          console.log("Created form data directly from today's appointment:", formData);
+          
+          // ตรวจสอบว่ามี area_id หรือไม่
+          if (!formData.area_id) {
+            console.error("Missing area_id in today's appointment:", appointment);
+            
+            // ถ้าไม่มี area_id แต่มี area_name ให้ค้นหา area_id จาก area_name
+            if (appointment.area_name) {
+              console.log("Trying to find area_id from area_name:", appointment.area_name);
+              
+              // ค้นหาพื้นที่จอดรถที่มีชื่อตรงกับ area_name
+              const matchingArea = parkingAreas.find(area => area.area_name === appointment.area_name);
+              
+              if (matchingArea) {
+                console.log("Found matching area:", matchingArea);
+                formData.area_id = matchingArea.area_id;
+              } else {
+                throw new Error("ไม่พบข้อมูลลานจอดในการนัดหมาย กรุณาติดต่อผู้ดูแลระบบ");
+              }
+            } else {
+              throw new Error("ไม่พบข้อมูลลานจอดในการนัดหมาย กรุณาติดต่อผู้ดูแลระบบ");
+            }
+          }
+        }
+      } else {
+        // ถ้าไม่ใช่ Visitor ให้ใช้ข้อมูลจากฟอร์ม
+        formData = { ...entryFormData };
+      }
+      
+      // Detailed logging for debugging
+      console.log("Form data before validation:", formData);
+      console.log("area_id:", formData.area_id);
+      console.log("vehicle_id:", formData.vehicle_id);
+      console.log("entry_time:", formData.entry_time);
+      
+      // ตรวจสอบและแก้ไขค่า area_id ถ้าไม่มี
+      if (!formData.area_id && role === "Visitor") {
+        if (appointmentFromStorage && appointmentFromStorage.area_id) {
+          console.log("Fixing missing area_id with value from storage:", appointmentFromStorage.area_id);
+          formData.area_id = appointmentFromStorage.area_id;
+        } else if (hasAppointmentToday && visitorAppointments.length > 0 && visitorAppointments[0].area_id) {
+          console.log("Fixing missing area_id with value from today's appointment:", visitorAppointments[0].area_id);
+          formData.area_id = visitorAppointments[0].area_id;
+        }
+        
+        // ถ้ายังไม่มี area_id ให้ดึงจาก hidden input
+        if (!formData.area_id) {
+          const hiddenInput = document.getElementById('visitor-area-id');
+          if (hiddenInput && hiddenInput.value) {
+            console.log("Getting area_id from hidden input:", hiddenInput.value);
+            formData.area_id = hiddenInput.value;
+          }
+        }
+        
+        // ถ้ายังไม่มี area_id ให้แสดงข้อความผิดพลาด
+        if (!formData.area_id) {
+          console.error("Still missing area_id after all attempts");
+          throw new Error("ไม่พบข้อมูลลานจอดในการนัดหมาย กรุณาติดต่อผู้ดูแลระบบ");
+        }
+      }
+      
+      // Validate form data with detailed error messages
+      if (!formData.area_id) {
+        console.error("Missing area_id in form data");
+        throw new Error("กรุณาเลือกลานจอด (area_id is missing)");
+      }
+      
+      if (!formData.vehicle_id) {
+        console.error("Missing vehicle_id in form data");
+        throw new Error("กรุณาเลือกยานพาหนะ (vehicle_id is missing)");
+      }
+      
+      if (!formData.entry_time) {
+        console.error("Missing entry_time in form data");
+        throw new Error("กรุณาระบุเวลาเข้า (entry_time is missing)");
+      }
+      
+      console.log("Submitting entry data:", formData);
+
+      // Create parking entry
+      const response = await createParkingEntry(formData);
+
+      if (response.success) {
+        setSuccess("บันทึกข้อมูลการเข้าจอดสำเร็จ");
+
+        // ล้างข้อมูลใน localStorage เพื่อไม่ให้มีการใช้งานข้อมูลเก่า
+        localStorage.removeItem('active_parking');
+        localStorage.removeItem('selectedAppointment');
+        
+        // รีเฟรชข้อมูลเพื่อให้แน่ใจว่าข้อมูลที่แสดงเป็นข้อมูลล่าสุดจากฐานข้อมูล
+        setTimeout(async () => {
+          await refreshAllData();
+          setShowEntryModal(false);
+        }, 2000);
+      } else {
+        throw new Error(response.message || "ไม่สามารถบันทึกข้อมูลการเข้าจอดได้");
+      }
+    } catch (error) {
+      console.error("Error creating parking entry:", error);
+      setError(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle form change for parking exit
+  const handleExitFormChange = (e) => {
+    const { name, value } = e.target;
+    setExitFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submission for parking exit
+  const handleExitSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Validate form data
+      if (!exitFormData.history_id || !exitFormData.exit_time) {
+        throw new Error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      }
+
+      // Create parking exit
+      const response = await createParkingExit(exitFormData);
+
+      if (response.success) {
+        setSuccess("บันทึกข้อมูลการออกจากที่จอดสำเร็จ");
+        
+        // ล้างข้อมูลใน localStorage
+        localStorage.removeItem('active_parking');
+        
+        // รีเฟรชข้อมูล
+        setTimeout(async () => {
+          await refreshAllData();
+          setShowExitModal(false);
+        }, 2000);
+      } else {
+        throw new Error(response.message || "ไม่สามารถบันทึกข้อมูลการออกจากที่จอดได้");
+      }
+    } catch (error) {
+      console.error("Error creating parking exit:", error);
+      setError(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setShowEntryModal(false);
+    setShowExitModal(false);
+    setError("");
+    setSuccess("");
+  };
+
+  // Render active parking information
+  const renderActiveParking = () => {
+    if (!activeParking) return null;
+
+    return (
+      <div className="active-parking-info">
+        <h3>ข้อมูลการจอดปัจจุบัน</h3>
+        <div className="parking-details">
+          <p><strong>ลานจอด:</strong> {activeParking.area_name}</p>
+          <p><strong>อาคาร:</strong> {activeParking.building_name}</p>
+          <p><strong>ยานพาหนะ:</strong> {activeParking.license_plate} ({activeParking.vehicle_type})</p>
+          <p><strong>เวลาเข้า:</strong> {activeParking.entry_time}</p>
+          <p><strong>สถานะ:</strong> <span className="active-status">กำลังจอด</span></p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="scan-qr-container">
+      <div className="scan-qr-content">
+        <h2>สแกน QR Code</h2>
+        <p>กรุณาสแกน QR Code เพื่อบันทึกการเข้า-ออกลานจอดรถ</p>
+
+        {/* QR Scanner */}
+        <div className="qr-scanner-container">
+          {!cameraError ? (
+            <QrScanner
+              delay={300}
+              onError={handleScanError}
+              onScan={handleScan}
+              style={{ width: '100%' }}
+            />
+          ) : (
+            <div className="camera-error">
+              <p>ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตการใช้งานกล้อง</p>
+              <Button 
+                variant="primary" 
+                onClick={() => setCameraError(false)}
+              >
+                ลองใหม่
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Loading Spinner */}
+        {loading && (
+          <div className="loading-overlay">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">กำลังโหลด...</span>
+            </Spinner>
+          </div>
+        )}
+
+        {/* Display Active Parking */}
+        {renderActiveParking()}
+
+        {/* Simulation Buttons */}
+        <div className="simulation-buttons">
+          <button
+            className="entry-btn"
+            onClick={handleOpenEntryModal}
+            // แก้ไขเงื่อนไขการ disabled ให้รวมกรณี visitor ไม่มีการนัดหมาย
+            disabled={activeParking !== null || (role === "Visitor" && !hasAppointmentToday && !appointmentFromStorage)}
+          >
+            {role === "Visitor" ? "บันทึกการเข้าจอดตามการนัดหมาย" : "จำลองการแสกนเข้า"}
+          </button>
+
+          <button
+            className="exit-btn"
+            onClick={() => {
+              if (activeParking) {
+                setShowExitModal(true);
+                setExitFormData({
+                  ...exitFormData,
+                  history_id: activeParking.history_id,
+                  exit_time: new Date().toTimeString().substring(0, 5)
+                });
+              } else {
+                setError("ไม่พบข้อมูลการจอดที่กำลังใช้งานอยู่");
+              }
+            }}
+            disabled={activeParking === null}
+          >
+            จำลองการแสกนออก
+          </button>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="alert alert-danger mt-3">
+            {error}
+          </div>
+        )}
+
+        {/* Success Message */}
+        {success && (
+          <div className="alert alert-success mt-3">
+            {success}
+          </div>
+        )}
+
+        {/* Refresh Button */}
+        <div className="refresh-button-container">
+          <Button 
+            variant="outline-primary" 
+            onClick={refreshAllData} 
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                <span className="ms-2">กำลังโหลด...</span>
+              </>
+            ) : (
+              "รีเฟรชข้อมูล"
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Entry Modal */}
+      <Modal 
+        show={showEntryModal} 
+        onHide={handleCloseModal} 
+        centered
+        onShow={() => {
+          // เมื่อ Modal แสดง ให้ตรวจสอบและตั้งค่า area_id ใหม่
+          if (role === "Visitor") {
+            let areaId = null;
+            let vehicleId = null;
+            let entryTime = null;
+            
+            if (appointmentFromStorage) {
+              if (appointmentFromStorage.area_id) {
+                areaId = appointmentFromStorage.area_id;
+                console.log("Setting area_id on modal show from storage:", areaId);
+              }
+              
+              if (appointmentFromStorage.vehicle_id) {
+                vehicleId = appointmentFromStorage.vehicle_id;
+                console.log("Setting vehicle_id on modal show from storage:", vehicleId);
+              }
+              
+              if (appointmentFromStorage.start_time) {
+                entryTime = appointmentFromStorage.start_time;
+                console.log("Setting entry_time on modal show from storage:", entryTime);
+              }
+            } else if (hasAppointmentToday && visitorAppointments.length > 0) {
+              const appointment = visitorAppointments[0];
+              
+              if (appointment.area_id) {
+                areaId = appointment.area_id;
+                console.log("Setting area_id on modal show from today's appointment:", areaId);
+              }
+              
+              if (appointment.vehicle_id) {
+                vehicleId = appointment.vehicle_id;
+                console.log("Setting vehicle_id on modal show from today's appointment:", vehicleId);
+              }
+              
+              if (appointment.start_time) {
+                entryTime = appointment.start_time;
+                console.log("Setting entry_time on modal show from today's appointment:", entryTime);
+              }
+            }
+            
+            // อัพเดทฟอร์มข้อมูล
+            let updatedFormData = { ...entryFormData };
+            
+            if (areaId) {
+              updatedFormData.area_id = areaId;
+            }
+            
+            if (vehicleId) {
+              updatedFormData.vehicle_id = vehicleId;
+            }
+            
+            if (entryTime) {
+              updatedFormData.entry_time = entryTime;
+            }
+            
+            setEntryFormData(updatedFormData);
+            console.log("Updated form data on modal show:", updatedFormData);
+            
+            // ตรวจสอบว่า area_id ถูกตั้งค่าหรือไม่
+            setTimeout(() => {
+              console.log("Current entryFormData after modal show:", entryFormData);
+            }, 100);
+          }
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{role === "Visitor" ? "บันทึกการเข้าจอดตามการนัดหมาย" : "จำลองการเข้าจอดรถ"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
+          
+          {/* แสดงข้อความแจ้งเตือนสำหรับ Visitor ว่าข้อมูลถูกกำหนดจากการนัดหมาย */}
+          {role === "Visitor" && (hasAppointmentToday || appointmentFromStorage) && (
+            <div className="alert alert-info mb-3">
+              <p><strong>ข้อมูลการจอดถูกกำหนดตามการนัดหมายของคุณ</strong></p>
+              <p>คุณไม่สามารถแก้ไขข้อมูลสถานที่และเวลาได้ เนื่องจากถูกกำหนดโดยการนัดหมาย</p>
+              <div className="mt-2">
+                <Button 
+                  variant="outline-secondary" 
+                  size="sm" 
+                  onClick={() => {
+                    console.log("Current form data:", entryFormData);
+                    console.log("Appointment from storage:", appointmentFromStorage);
+                    console.log("Today's appointments:", visitorAppointments);
+                    console.log("Has appointment today:", hasAppointmentToday);
+                    
+                    // ตรวจสอบและแสดงค่า area_id
+                    if (appointmentFromStorage) {
+                      alert(`Area ID from storage: ${appointmentFromStorage.area_id || 'Not found'}`);
+                    } else if (hasAppointmentToday && visitorAppointments.length > 0) {
+                      alert(`Area ID from today's appointment: ${visitorAppointments[0].area_id || 'Not found'}`);
+                    } else {
+                      alert('No appointment data found');
+                    }
+                  }}
+                >
+                  ตรวจสอบข้อมูล
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <Form onSubmit={handleEntrySubmit}>
+            {/* วันที่และเวลา */}
+            
+            <Form.Group className="mb-3">
+              <Form.Label>วันที่</Form.Label>
+              <Form.Control
+                type="date"
+                value={role === "Visitor" && appointmentFromStorage && appointmentFromStorage.appointment_date ? 
+                  appointmentFromStorage.appointment_date : date}
+                onChange={(e) => setDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                max={new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0]}
+                disabled={role === "Visitor"}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>เวลาเข้า</Form.Label>
+              <Form.Control
+                type="time"
+                name="entry_time"
+                value={role === "Visitor" && appointmentFromStorage && appointmentFromStorage.start_time ? 
+                  appointmentFromStorage.start_time : entryFormData.entry_time}
+                onChange={handleEntryFormChange}
+                required
+                disabled={role === "Visitor"}
+              />
+            </Form.Group>
+
+            {/* Building Selection - แสดงแต่ไม่ให้แก้ไขถ้าเป็น Visitor */}
+            <Form.Group className="mb-3">
+              <Form.Label>อาคาร</Form.Label>
+              {role === "Visitor" ? (
+                <Form.Control
+                  type="text"
+                  value={appointmentFromStorage ? appointmentFromStorage.building_name || "" : 
+                    (hasAppointmentToday && visitorAppointments.length > 0 ? 
+                      visitorAppointments[0].building_name || "" : "")}
+                  disabled
+                />
+              ) : (
+                <Form.Select
+                  value={selectedBuilding}
+                  onChange={(e) => {
+                    setSelectedBuilding(e.target.value);
+                    setEntryFormData(prev => ({ ...prev, area_id: "" }));
+                  }}
+                  required
+                  disabled={role === "Visitor"}
+                >
+                  <option value="">-- เลือกอาคาร --</option>
+                  {buildings.map((building, index) => (
+                    <option key={index} value={building}>
+                      อาคาร {building}
+                    </option>
+                  ))}
+                </Form.Select>
+              )}
+            </Form.Group>
+
+            {/* Area Selection - แสดงแต่ไม่ให้แก้ไขถ้าเป็น Visitor */}
+            <Form.Group className="mb-3">
+              <Form.Label>ลานจอด</Form.Label>
+              {role === "Visitor" ? (
+                <Form.Control
+                  type="text"
+                  value={appointmentFromStorage ? appointmentFromStorage.area_name || "" : 
+                    (hasAppointmentToday && visitorAppointments.length > 0 ? 
+                      visitorAppointments[0].area_name || "" : "")}
+                  disabled
+                />
+              ) : (
+                <Form.Select
+                  name="area_id"
+                  value={entryFormData.area_id}
+                  onChange={handleEntryFormChange}
+                  required
+                  disabled={!selectedBuilding || role === "Visitor"}
+                >
+                  <option value="">-- เลือกลานจอด --</option>
+                  {filteredAreas.map((area) => (
+                    <option
+                      key={area.id}
+                      value={area.id}
+                      disabled={area.parking_status !== 'open'}
+                    >
+                      {area.floor} ({area.slots}) - {area.status}
+                    </option>
+                  ))}
+                </Form.Select>
+              )}
+              {/* Hidden input to store the area_id from appointment */}
+              {role === "Visitor" && (
+                <input 
+                  type="hidden" 
+                  id="visitor-area-id"
+                  value={appointmentFromStorage ? appointmentFromStorage.area_id : 
+                    (hasAppointmentToday && visitorAppointments.length > 0 ? 
+                      visitorAppointments[0].area_id : "")}
+                />
+              )}
+            </Form.Group>
+
+            {/* Vehicle Selection */}
+            <Form.Group className="mb-3">
+              <Form.Label>ยานพาหนะ</Form.Label>
+              <Form.Select
+                name="vehicle_id"
+                value={entryFormData.vehicle_id}
+                onChange={handleEntryFormChange}
+                required
+                disabled={role === "Visitor" && (
+                  (appointmentFromStorage && appointmentFromStorage.vehicle_id) || 
+                  (hasAppointmentToday && visitorAppointments.length > 0 && visitorAppointments[0].vehicle_id)
+                )}
+              >
+                <option value="">-- เลือกยานพาหนะ --</option>
+                {vehicles.map((vehicle) => (
+                  <option key={vehicle.vehicle_id} value={vehicle.vehicle_id}>
+                    {vehicle.license_plate} ({vehicle.vehicle_type})
+                    {vehicle.is_primary ? " - หลัก" : ""}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <div className="d-grid gap-2">
+              <Button 
+                variant="primary" 
+                type="submit" 
+                disabled={loading || success}
+              >
+                {loading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    <span className="ms-2">กำลังบันทึก...</span>
+                  </>
+                ) : (
+                  "บันทึกการเข้าจอด"
+                )}
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Exit Modal */}
+      <Modal show={showExitModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>จำลองการออกจากที่จอด</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
+
+          {activeParking && (
+            <div className="active-parking-summary mb-3">
+              <h5>ข้อมูลการจอดปัจจุบัน</h5>
+              <p><strong>ลานจอด:</strong> {activeParking.area_name}</p>
+              <p><strong>อาคาร:</strong> {activeParking.building_name}</p>
+              <p><strong>ยานพาหนะ:</strong> {activeParking.license_plate}</p>
+              <p><strong>เวลาเข้า:</strong> {activeParking.entry_time}</p>
+            </div>
+          )}
+
+          <Form onSubmit={handleExitSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>เวลาออก</Form.Label>
+              <Form.Control
+                type="time"
+                name="exit_time"
+                value={exitFormData.exit_time}
+                onChange={handleExitFormChange}
+                required
+              />
+            </Form.Group>
+
+            <input
+              type="hidden"
+              name="history_id"
+              value={exitFormData.history_id}
+            />
+
+            <div className="d-grid gap-2">
+              <Button 
+                variant="primary" 
+                type="submit" 
+                disabled={loading || success}
+              >
+                {loading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    <span className="ms-2">กำลังบันทึก...</span>
+                  </>
+                ) : (
+                  "บันทึกการออกจากที่จอด"
+                )}
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Bottom Navigation */}
+      <div className="bottom-nav">
+        <Link to="/" className="nav-item">
+          <IoHome className="nav-icon" />
+          <span>หน้าหลัก</span>
+        </Link>
+        <Link to="/search" className="nav-item">
+          <FaSearch className="nav-icon" />
+          <span>ค้นหา</span>
+        </Link>
+        <Link to="/history" className="nav-item">
+          <FaHistory className="nav-icon" />
+          <span>ประวัติ</span>
+        </Link>
+        <Link to="/profile" className="nav-item">
+          <FaUser className="nav-icon" />
+          <span>โปรไฟล์</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default ScanQR;

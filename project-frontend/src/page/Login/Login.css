@@ -1,0 +1,150 @@
+.box1{
+    height: 200px;
+    margin-top: -20px;
+    margin-bottom: 35px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    border: 5px solid #FFFFFF;
+    border-bottom-right-radius: 70px ;
+    border-bottom-left-radius: 70px  ;
+    border-bottom-color:  #F2F2E6;
+    border-right-color: #F2F2E6;
+    border-left-color: #F2F2E6;
+}
+.Logo-image{
+    width: 280px;
+    height: 200px;
+    object-fit: contain; /* รูปภาพจะถูกปรับขนาดโดยไม่ถูกตัด */
+    margin-top: 10px;
+}
+.title{
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 28px;
+    margin-top: 40px;
+}
+
+.userlogin{
+    margin-top: 0px;
+    margin-left: 25px;
+    margin-right: 25px;
+    
+}
+.passlogin{
+    margin-top: -15px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.forgot{
+    display: flex;
+    gap: 5px; /* ระยะห่างระหว่างปุ่ม */
+    justify-content: flex-end; /* เรียงปุ่มทางซ้าย */
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+    margin-right: 1.5rem;
+    
+}
+.form-control{
+  color: #000000 !important; /* สีข้อความ */
+}
+.custom-btn {
+    font-weight: 600 !important;
+    height: 3rem;
+    width: 88%;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: #FD6E2B !important;  /* เปลี่ยนสีพื้นหลัง */
+    color: white !important;  /* เปลี่ยนสีข้อความ */
+    border-radius: 5px;
+    border: none;
+    outline: none; /* ลบขอบโฟกัสเริ่มต้น */
+    /* border: 1px solid transparent;   /*ตั้งค่าขอบเริ่มต้น */
+    /* transition: border-color 0.3s ease;  */
+    transition: background-color 0.3s ease; 
+    cursor: pointer; /*ทำให้เมาส์เป็นรูปมือ*/
+  }
+  
+.custom-btn:hover {
+    background-color: #f36929 !important;  
+  }
+
+.custom-btn:active {
+   background-color: #eb6628 !important;  
+}
+.custom1-btn {
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .custom1-btn {
+    height: 30px;
+  }
+
+  .custom2-btn {
+    font-weight: 600 !important;
+    height: 3rem;
+    width: 88%;
+    margin-top: 20px;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: #06C755 !important;  /* เปลี่ยนสีพื้นหลัง */
+    color: white !important;  /* เปลี่ยนสีข้อความ */
+    border-radius: 5px;
+    border: none;
+    outline: none; /* ลบขอบโฟกัสเริ่มต้น */
+    /* border: 1px solid transparent;   /*ตั้งค่าขอบเริ่มต้น */
+    /* transition: border-color 0.3s ease;  */
+    transition: background-color 0.3s ease; 
+    cursor: pointer;
+  }
+  
+.custom2-btn:hover {
+    background-color: #06be53 !important;  /* เปลี่ยนสีเมื่อวางเมาส์ */
+    /* border-color: #ffffff !important;  */
+  }
+
+.custom2-btn:active {
+   background-color: #05aa4a !important;  /* สีเมื่อกดปุ่ม */
+}
+
+/*Pop-up*/
+.custom-modal .modal-content {
+    background-color: #f5f5f5; /* สีพื้นหลังของ Modal */
+    border-radius: 8px; /* ความโค้งมนของขอบ */
+    border: 1px solid #9c9b9b; /* สีขอบ */
+    width: 80%;
+    margin: 0 auto;
+    display: block !important; /* บังคับให้แสดง */
+  }
+  
+  .custom-title {
+    color: #252525 !important; /* สีตัวอักษรในหัวข้อ */
+    font-weight: 500 !important ;
+  }
+  
+  .custom-body {
+    color: #313131; /* สีของข้อความภายใน */
+  }
+  .custom-body2 {
+    color: #313131; /* สีของข้อความภายใน */
+    font-size: 16px;
+    display: flex; /* ใช้ flexbox เพื่อจัดตำแหน่ง */
+    align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    margin-right: 10px;
+    white-space: pre-line;
+  }
+  
+  .custom3-btn {
+    background-color: #473366 !important; /* สีปุ่ม */
+    color: #ffffff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 100px;
+  }
+  
+  .custom3-btn:hover {
+    background-color: #3f2d5a !important; /* สีเมื่อ hover */
+  }
+  
