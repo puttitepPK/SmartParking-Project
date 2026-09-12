@@ -1,6 +1,16 @@
 # Database
 database/mysql-data/
 database/mysql_data/
+database/**/*.sock
+database/**/*.sdi
+database/**/*.dblwr
+database/**/binlog.*
+database/**/undo_*
+database/**/#ib_*
+database/**/performance_schema/
+database/**/mysql/
+database/**/sys/
+database/**/System_Parking2/
 
 # Node modules
 node_modules/
