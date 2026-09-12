@@ -12,6 +12,12 @@ yarn-error.log
 .env.local
 .env.*.local
 
+# SSL/TLS Certificates and Keys
+*.pem
+*.key
+*.crt
+*.cert
+
 # IDE
 .vscode/
 .idea/
